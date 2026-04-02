@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Patients</title>
+</head>
+<body>
+    <h1>Patients</h1>
+    <a href="/">Home</a>
+    <a href="/add_patient">Add Patient</a>
+    <table border="1">
+        <tr>
+            <th>SSN</th>
+            <th>Name</th>
+            <th>Address</th>
+        </tr>
+        {% for patient in patients %}
+        <tr>
+            <td>{{ patient.SSN }}</td>
+            <td>{{ patient.Name }}</td>
+            <td>{{ patient.Address }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
