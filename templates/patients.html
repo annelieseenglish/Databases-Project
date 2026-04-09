@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Patients{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Patients</h1>
+    <a href="{{ url_for('add_patient') }}" class="btn btn-primary">+ Add Patient</a>
+</div>
+
+<!-- Search Form -->
+<form method="GET" class="search-form">
+    <input type="text" name="search" value="{{ search }}" placeholder="Search by name or SSN…" class="search-input">
+    <button type="submit" class="btn btn-secondary">Search</button>
+    {% if search %}<a href="{{ url_for('patients') }}" class="btn btn-outline">Clear</a>{% endif %}
+</form>
+
+{% if patients %}
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>SSN</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in patients %}
+        <tr>
+            <td><code>{{ p.SSN }}</code></td>
+            <td>{{ p.Name }}</td>
+            <td>{{ p.Address }}</td>
+            <td class="action-cell">
+                <a href="{{ url_for('patient_providers', ssn=p.SSN) }}" class="btn btn-sm btn-secondary">View</a>
+                <a href="{{ url_for('edit_patient', ssn=p.SSN) }}" class="btn btn-sm btn-outline">Edit</a>
+                <form method="POST" action="{{ url_for('delete_patient', ssn=p.SSN) }}" style="display:inline"
+                      onsubmit="return confirm('Delete patient {{ p.Name }}? This will also remove their appointments.')">
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p class="record-count">{{ patients|length }} patient(s) found.</p>
+{% else %}
+<p class="empty-state">No patients found{% if search %} for "{{ search }}"{% endif %}.</p>
+{% endif %}
+{% endblock %}

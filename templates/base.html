@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ClinicChart{% endblock %} — ClinicChart</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- ===== Navigation Bar ===== -->
+<nav class="navbar">
+    <div class="nav-brand">
+        <span class="nav-icon">🏥</span>
+        <a href="{{ url_for('home') }}">ClinicChart</a>
+    </div>
+    <ul class="nav-links">
+        <li><a href="{{ url_for('patients') }}"     class="{{ 'active' if request.endpoint and 'patient' in request.endpoint else '' }}">Patients</a></li>
+        <li><a href="{{ url_for('physicians') }}"   class="{{ 'active' if request.endpoint and 'physician' in request.endpoint else '' }}">Physicians</a></li>
+        <li><a href="{{ url_for('appointments') }}" class="{{ 'active' if request.endpoint and 'appointment' in request.endpoint else '' }}">Appointments</a></li>
+        <li><a href="{{ url_for('providers') }}"    class="{{ 'active' if request.endpoint == 'providers' or request.endpoint == 'assign_provider' or request.endpoint == 'remove_provider' else '' }}">Providers</a></li>
+        <li><a href="{{ url_for('smart_schedule') }}" class="{{ 'active' if request.endpoint == 'smart_schedule' else '' }} smart-link">⚡ Smart Schedule</a></li>
+    </ul>
+</nav>
+
+<!-- ===== Flash Messages ===== -->
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+</div>
+
+<footer class="footer">
+    <p>ClinicChart &mdash; COP 4710 Spring 2026 &mdash; FSU Department of Computer Science</p>
+</footer>
+
+</body>
+</html>

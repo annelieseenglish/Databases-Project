@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}{{ action }} Appointment{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ action }} Appointment</h1>
+    <a href="{{ url_for('appointments') }}" class="btn btn-outline">← Back</a>
+</div>
+
+<div class="info-box" style="margin-bottom:1.5rem;">
+    <strong>Business Hours:</strong> Monday–Friday, 8:00 AM – 5:00 PM only.<br>
+    The system will reject overlapping physician appointments automatically.
+</div>
+
+<div class="form-card">
+    <form method="POST">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date"
+                       value="{{ appt.Date | string if appt else '' }}"
+                       required>
+            </div>
+            <div class="form-group">
+                <label for="time">Start Time</label>
+                <input type="time" id="time" name="time"
+                       value="{% if appt %}{% if appt.Time is string %}{{ appt.Time[:5] }}{% else %}{{ '%02d:%02d' % (appt.Time.seconds // 3600, (appt.Time.seconds % 3600) // 60) }}{% endif %}{% endif %}"
+                       min="08:00" max="17:00"
+                       required>
+            </div>
+            <div class="form-group">
+                <label for="duration">Duration (minutes)</label>
+                <input type="number" id="duration" name="duration"
+                       value="{{ appt.Duration if appt else 30 }}"
+                       min="15" max="120" step="15"
+                       required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="patient_ssn">Patient</label>
+            <select id="patient_ssn" name="patient_ssn" required>
+                <option value="">— Select Patient —</option>
+                {% for p in patients %}
+                <option value="{{ p.SSN }}"
+                    {% if appt and appt.Patient_SSN == p.SSN %}selected{% endif %}>
+                    {{ p.Name }} ({{ p.SSN }})
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="physician_license">Physician</label>
+            <select id="physician_license" name="physician_license" required>
+                <option value="">— Select Physician —</option>
+                {% for ph in physicians %}
+                <option value="{{ ph.License_Number }}"
+                    {% if appt and appt.Physician_License_Number == ph.License_Number %}selected{% endif %}>
+                    {{ ph.Name }} — {{ ph.Specialty }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">{{ action }} Appointment</button>
+            <a href="{{ url_for('appointments') }}" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

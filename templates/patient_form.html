@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}{{ action }} Patient{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ action }} Patient</h1>
+    <a href="{{ url_for('patients') }}" class="btn btn-outline">← Back</a>
+</div>
+
+<div class="form-card">
+    <form method="POST">
+        <div class="form-group">
+            <label for="ssn">Social Security Number (SSN)</label>
+            <input type="text" id="ssn" name="ssn"
+                   value="{{ patient.SSN if patient else '' }}"
+                   placeholder="XXX-XX-XXXX"
+                   pattern="\d{3}-\d{2}-\d{4}"
+                   title="Format: XXX-XX-XXXX"
+                   {% if action == 'Edit' %}readonly{% endif %}
+                   required>
+            {% if action == 'Edit' %}<small>SSN cannot be changed (primary key).</small>{% endif %}
+        </div>
+        <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name"
+                   value="{{ patient.Name if patient else '' }}"
+                   placeholder="Jane Doe" required>
+        </div>
+        <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" id="address" name="address"
+                   value="{{ patient.Address if patient else '' }}"
+                   placeholder="123 Main St, City, FL 32301" required>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">{{ action }} Patient</button>
+            <a href="{{ url_for('patients') }}" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

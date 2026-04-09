@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Physicians{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Physicians</h1>
+    <a href="{{ url_for('add_physician') }}" class="btn btn-primary">+ Add Physician</a>
+</div>
+
+<!-- Filter by Specialty -->
+<form method="GET" class="search-form">
+    <select name="specialty" class="search-input" style="max-width:280px">
+        <option value="">— All Specialties —</option>
+        {% for s in specialties %}
+        <option value="{{ s.Specialty }}" {% if s.Specialty == selected_specialty %}selected{% endif %}>
+            {{ s.Specialty }}
+        </option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-secondary">Filter</button>
+    {% if selected_specialty %}<a href="{{ url_for('physicians') }}" class="btn btn-outline">Clear</a>{% endif %}
+</form>
+
+{% if physicians %}
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>License #</th>
+            <th>Name</th>
+            <th>Specialty</th>
+            {% if not selected_specialty %}<th>Appointments</th>{% endif %}
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ph in physicians %}
+        <tr>
+            <td><code>{{ ph.License_Number }}</code></td>
+            <td>{{ ph.Name }}</td>
+            <td><span class="badge">{{ ph.Specialty }}</span></td>
+            {% if not selected_specialty %}
+            <td>{{ ph.Appointment_Count }}</td>
+            {% endif %}
+            <td class="action-cell">
+                <a href="{{ url_for('physician_patients', license_number=ph.License_Number) }}" class="btn btn-sm btn-secondary">View</a>
+                <a href="{{ url_for('edit_physician', license_number=ph.License_Number) }}" class="btn btn-sm btn-outline">Edit</a>
+                <form method="POST" action="{{ url_for('delete_physician', license_number=ph.License_Number) }}" style="display:inline"
+                      onsubmit="return confirm('Delete {{ ph.Name }}? Their appointments will also be removed.')">
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p class="record-count">{{ physicians|length }} physician(s) found.</p>
+{% else %}
+<p class="empty-state">No physicians found.</p>
+{% endif %}
+{% endblock %}

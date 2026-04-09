@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}{{ physician.Name }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ physician.Name }}</h1>
+    <a href="{{ url_for('physicians') }}" class="btn btn-outline">← Physicians</a>
+</div>
+
+<div class="detail-grid">
+    <div class="detail-box">
+        <h3>Physician Information</h3>
+        <dl class="detail-list">
+            <dt>License #</dt><dd><code>{{ physician.License_Number }}</code></dd>
+            <dt>Specialty</dt><dd><span class="badge">{{ physician.Specialty }}</span></dd>
+        </dl>
+        <a href="{{ url_for('edit_physician', license_number=physician.License_Number) }}" class="btn btn-sm btn-outline">Edit Physician</a>
+    </div>
+</div>
+
+<!-- Patients -->
+<div class="section">
+    <h2>Assigned Patients</h2>
+    {% if patients %}
+    <table class="data-table">
+        <thead>
+            <tr><th>SSN</th><th>Patient Name</th><th>Address</th></tr>
+        </thead>
+        <tbody>
+            {% for p in patients %}
+            <tr>
+                <td><code>{{ p.SSN }}</code></td>
+                <td><a href="{{ url_for('patient_providers', ssn=p.SSN) }}">{{ p.Patient_Name }}</a></td>
+                <td>{{ p.Address }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="empty-state">No patients assigned yet.</p>
+    {% endif %}
+</div>
+
+<!-- Appointments -->
+<div class="section">
+    <h2>Appointments</h2>
+    {% if appointments %}
+    <table class="data-table">
+        <thead>
+            <tr><th>ID</th><th>Date</th><th>Time</th><th>Duration</th><th>Patient</th></tr>
+        </thead>
+        <tbody>
+            {% for a in appointments %}
+            <tr>
+                <td>#{{ a.Appt_ID }}</td>
+                <td>{{ a.Date }}</td>
+                <td>{{ a.Time }}</td>
+                <td>{{ a.Duration }} min</td>
+                <td>{{ a.Patient_Name }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="empty-state">No appointments scheduled.</p>
+    {% endif %}
+</div>
+{% endblock %}
