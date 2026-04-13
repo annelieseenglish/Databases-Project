@@ -82,11 +82,7 @@ cd clinic_app
 
 ### Step 2 — Install Python Dependencies
 
-```bash
-pip install flask mysql-connector-python
-```
-
-Or create a virtual environment first (recommended):
+Create a virtual environment:
 
 ```bash
 python -m venv venv
@@ -105,12 +101,6 @@ DB_HOST     = 'localhost'
 DB_USER     = 'root'
 DB_PASSWORD = 'your_mysql_password'   # ← change this
 DB_NAME     = 'clinic_db'
-```
-
-You can also set these via environment variables:
-
-```bash
-export DB_PASSWORD=your_password
 ```
 
 ### Step 4 — Create and Seed the Database
@@ -135,7 +125,7 @@ SOURCE /full/path/to/clinic_app/database/seed_data.sql;
 python app.py
 ```
 
-Open your browser to: **http://localhost:5000**
+Open your browser to: **http://localhost:5001**
 
 ---
 
